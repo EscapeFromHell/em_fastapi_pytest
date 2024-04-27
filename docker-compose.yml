@@ -1,0 +1,77 @@
+version: "3"
+services:
+  spimex-fastapi-db:
+    image: postgres:16.2
+    ports:
+      - "5432:5432"
+    volumes:
+      - app-db-data:/var/lib/postgresql/data/pgdata
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_SERVER=spimex-fastapi-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=spimex-fastapi
+    restart: always
+
+#  spimex-fastapi-db-test:
+#    image: postgres:16.2
+#    ports:
+#      - "5433:5433"
+#    volumes:
+#      - app-db-data:/var/lib/postgresql/data/pgdata
+#    environment:
+#      - PGDATA=/var/lib/postgresql/data/pgdata
+#      - POSTGRES_SERVER=spimex-fastapi-db-test
+#      - POSTGRES_USER=postgres-test
+#      - POSTGRES_PASSWORD=password-test
+#      - POSTGRES_DB=spimex-fastapi-test
+#    restart: always
+
+  spimex-fastapi:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - spimex-fastapi-db
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/src
+    environment:
+      - DATABASE_DSN=postgresql://postgres:password@spimex-fastapi-db:5432/spimex-fastapi
+      - BACKEND_CORS_ORIGINS=["http://localhost:3000","http://localhost:8000"]
+    command: sh -c "alembic upgrade head && uvicorn --host 0.0.0.0 --port 8000 src.main:app"
+    restart: always
+
+  redis:
+    image: redis:7.0.5-alpine
+    hostname: redis
+
+  celery-worker:
+    build:
+      context: .
+    hostname: worker
+    entrypoint: celery
+    command: -A src.config.celery_config.app worker --loglevel=info
+    volumes:
+      - ./:/src
+    links:
+      - redis
+    depends_on:
+      - redis
+    environment:
+      - DB_HOST=database
+      - DB_NAME=db
+      - DB_USER=user
+      - DB_PASSWORD=password
+
+  celery-beat:
+    build:
+      context: .
+    volumes:
+      - ./:/src
+    command: celery -A src.config.celery_config.app beat -l info
+
+volumes:
+  app-db-data:
