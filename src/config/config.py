@@ -22,9 +22,9 @@ class Settings(BaseSettings):
     def DB_URL(self):
         return f"postgresql+asyncpg://{self.USER}:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.NAME}"
 
-    # @property
-    # def TEST_DB_URL(self):
-    #     return f"postgresql+asyncpg://{self.USER_TEST}:{self.PASSWORD_TEST}@{self.HOST_TEST}:{self.PORT_TEST}/{self.NAME_TEST}"
+    @property
+    def TEST_DB_URL(self):
+        return f"postgresql+asyncpg://{self.USER_TEST}:{self.PASSWORD_TEST}@{self.HOST_TEST}:{self.PORT_TEST}/{self.NAME_TEST}"
 
     BACKEND_CORS_ORIGINS: list[AnyHttpUrl] = [
         "http://localhost",

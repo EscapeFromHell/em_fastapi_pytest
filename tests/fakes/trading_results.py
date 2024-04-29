@@ -1,4 +1,5 @@
 from datetime import date, datetime
+
 from src.core.schemas import SpimexTradingResults
 
 FAKE_TRADING_RESULTS: list[SpimexTradingResults] = [
@@ -15,8 +16,7 @@ FAKE_TRADING_RESULTS: list[SpimexTradingResults] = [
         count="count_1",
         date=date(2024, 4, 25),
         created_on=datetime(2024, 4, 25, 10, 10, 10, 0),
-        updated_on=datetime(2024, 4, 25, 10, 10, 10, 0)
-
+        updated_on=datetime(2024, 4, 25, 10, 10, 10, 0),
     ),
     SpimexTradingResults(
         id=2,
@@ -31,7 +31,7 @@ FAKE_TRADING_RESULTS: list[SpimexTradingResults] = [
         count="count_2",
         date=date(2024, 4, 24),
         created_on=datetime(2024, 4, 24, 10, 10, 10, 0),
-        updated_on=datetime(2024, 4, 24, 10, 10, 10, 0)
+        updated_on=datetime(2024, 4, 24, 10, 10, 10, 0),
     ),
     SpimexTradingResults(
         id=3,
@@ -46,6 +46,6 @@ FAKE_TRADING_RESULTS: list[SpimexTradingResults] = [
         count="count_3",
         date=date(2024, 4, 23),
         created_on=datetime(2024, 4, 23, 10, 10, 10, 0),
-        updated_on=datetime(2024, 4, 23, 10, 10, 10, 0)
+        updated_on=datetime(2024, 4, 23, 10, 10, 10, 0),
     ),
 ]

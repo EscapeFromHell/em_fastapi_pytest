@@ -3,6 +3,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends
 from fastapi_cache.decorator import cache
+from pydantic import PositiveInt
 
 from src.config import settings
 from src.core.clients import SpimexClient
@@ -39,7 +40,7 @@ async def get_spimex_trading_results(
 @router.get("/last_trading_dates", status_code=200, response_model=LastTradingDates)
 @cache(expire=settings.REDIS_EXPIRATION_TIME)
 async def get_last_trading_dates(
-    days: int,
+    days: PositiveInt,
     uow: UnitOfWork = Depends(UnitOfWork),
 ) -> LastTradingDates:
     """

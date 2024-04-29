@@ -2,7 +2,7 @@ from copy import deepcopy
 from typing import Callable, Sequence
 
 import pytest
-from sqlalchemy import text, Result, select, insert
+from sqlalchemy import Result, insert, select, text
 
 from src.core.models import SpimexTradingResults
 from src.core.schemas import SpimexTradingResults as SpimexTradingResultsSchema
@@ -41,9 +41,7 @@ def add_trading_results(async_session_maker, trading_results) -> Callable:
     async def _add_trading_results() -> None:
         async with async_session_maker() as session:
             for trading_results_schema in trading_results:
-                await session.execute(
-                    insert(SpimexTradingResults).values(**trading_results_schema.model_dump())
-                )
+                await session.execute(insert(SpimexTradingResults).values(**trading_results_schema.model_dump()))
             await session.commit()
 
     return _add_trading_results
